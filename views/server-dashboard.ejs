@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>لوحة تحكم السيرفر - بوت الأمان</title>
+    <link rel="icon" href="https://i.ibb.co/Hq8V39j/image.png" type="image/png">
+
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #4caf50;
+            --background-color: #1a1a1a;
+            --card-background: #2c2c2c;
+            --text-color: #ffffff;
+            --secondary-color: #45a049;
+            --hover-color: #3e8e41;
+            --nav-background: #333333;
+            --nav-hover: #555555;
+        }
+
+        body {
+            font-family: 'Cairo', Arial, sans-serif;
+            background-color: var(--background-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            background-color: var(--nav-background);
+            color: var(--text-color);
+            padding: 0;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 30px;
+        }
+
+        .nav-logo {
+            display: flex;
+            align-items: center;
+        }
+
+        .nav-logo img {
+            width: 40px;
+            height: 40px;
+            margin-right: 10px;
+        }
+
+        .nav-logo h1 {
+            margin: 0;
+            font-size: 1.5rem;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 20px;
+        }
+
+        .nav-links a {
+            color: var(--text-color);
+            text-decoration: none;
+            font-weight: bold;
+            padding: 10px 15px;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            background-color: var(--nav-hover);
+        }
+
+        .language-toggle {
+            background-color: var(--secondary-color);
+            color: var(--text-color);
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background-color 0.3s ease;
+        }
+
+        .language-toggle:hover {
+            background-color: var(--hover-color);
+        }
+
+        .server-info {
+            background-color: var(--primary-color);
+            padding: 30px 0;
+            text-align: center;
+        }
+
+        .server-icon {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            border: 3px solid var(--text-color);
+            box-shadow: 0 0 10px rgba(255,255,255,0.3);
+            margin-bottom: 15px;
+        }
+
+        h2 {
+            margin: 0;
+            font-size: 2rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .command-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 25px;
+            margin-top: 40px;
+        }
+
+        .command-card {
+            background-color: var(--card-background);
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 6px 12px rgba(0,0,0,0.2);
+            transition: all 0.3s ease;
+        }
+
+        .command-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 12px 24px rgba(0,0,0,0.3);
+        }
+
+        .command-name {
+            font-size: 1.3rem;
+            font-weight: bold;
+            margin-bottom: 15px;
+            color: var(--primary-color);
+        }
+
+        .toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 60px;
+            height: 34px;
+        }
+
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: .4s;
+            border-radius: 34px;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 26px;
+            width: 26px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+
+        input:checked + .slider {
+            background-color: var(--primary-color);
+        }
+
+        input:checked + .slider:before {
+            transform: translateX(26px);
+        }
+
+        .protection-type {
+            font-weight: bold;
+            margin-top: 25px;
+            margin-bottom: 15px;
+            font-size: 1.4rem;
+            color: var(--primary-color);
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav>
+            <div class="nav-logo">
+                <img src="https://i.ibb.co/Hq8V39j/image.png" alt="Logo">
+                <h1 class="lang-ar">لوحة تحكم السيرفر</h1>
+                <h1 class="lang-en" style="display: none;">Server Dashboard</h1>
+            </div>
+            <div class="nav-links">
+                <a href="/dashboard" class="lang-ar">الرئيسية</a>
+                <a href="/dashboard" class="lang-en" style="display: none;">Home</a>
+                <a href="https://discord.gg/7up" class="lang-ar">المساعدة</a>
+                <a href="https://discord.gg/7up" class="lang-en" style="display: none;">Help</a>
+            </div>
+            <button class="language-toggle" onclick="toggleLanguage()">
+                <span class="lang-ar">English</span>
+                <span class="lang-en" style="display: none;">عربي</span>
+            </button>
+        </nav>
+    </header>
+    <div class="server-info">
+        <img src="<%= server.icon %>" alt="<%= server.name %>" class="server-icon">
+        <h2><%= server.name %></h2>
+    </div>
+    <main class="container">
+        <div class="command-list">
+            <% ['antispam', 'antiraid', 'antiscam', 'antilink'].forEach(protectionType => { %>
+                <div class="command-card">
+                    <div class="command-name">
+                        <span class="lang-ar"><%= {
+                            'antispam': '🚫 مكافحة السبام',
+                            'antiraid': '🛑 مكافحة الريد',
+                            'antiscam': '🕵️ مكافحة الاحتيال',
+                            'antilink': '🔗 مكافحة الروابط'
+                        }[protectionType] %></span>
+                        <span class="lang-en" style="display: none;"><%= {
+                            'antispam': '🚫 Anti-Spam',
+                            'antiraid': '🛑 Anti-Raid',
+                            'antiscam': '🕵️ Anti-Scam',
+                            'antilink': '🔗 Anti-Link'
+                        }[protectionType] %></span>
+                    </div>
+                    <p class="lang-ar"><%= {
+                        'antispam': 'حماية السيرفر من الرسائل المتكررة',
+                        'antiraid': 'حماية السيرفر من هجمات الريد',
+                        'antiscam': 'حماية الأعضاء من محاولات الاحتيال',
+                        'antilink': 'منع نشر الروابط غير المرغوب فيها'
+                    }[protectionType] %></p>
+                    <p class="lang-en" style="display: none;"><%= {
+                        'antispam': 'Protect the server from repeated messages',
+                        'antiraid': 'Protect the server from raid attacks',
+                        'antiscam': 'Protect members from scam attempts',
+                        'antilink': 'Prevent posting unwanted links'
+                    }[protectionType] %></p>
+                    <label class="toggle-switch">
+                        <input type="checkbox" <%= db.get(`${guild.id}_${protectionType}`) ? 'checked' : '' %> onchange="toggleProtection('<%= protectionType %>', this.checked, '<%= guild.id %>')">
+                        <span class="slider"></span>
+                    </label>
+                </div>
+            <% }); %>
+            
+            <% ['antichandeldelete', 'antichanelcreate', 'antichanneledit', 'antirolecreate', 'antiroledelete', 'antiroleedit'].forEach(protectionType => { %>
+                <div class="command-card">
+                    <div class="command-name">
+                        <span class="lang-ar"><%= {
+                            'antichandeldelete': '🗑️ مكافحة حذف القنوات',
+                            'antichanelcreate': '➕ مكافحة إنشاء القنوات',
+                            'antichanneledit': '✏️ مكافحة تعديل القنوات',
+                            'antirolecreate': '🏷️ مكافحة إنشاء الأدوار',
+                            'antiroledelete': '🗑️ مكافحة حذف الأدوار',
+                            'antiroleedit': '✏️ مكافحة تعديل الأدوار'
+                        }[protectionType] %></span>
+                        <span class="lang-en" style="display: none;"><%= {
+                            'antichandeldelete': '🗑️ Anti-Channel Delete',
+                            'antichanelcreate': '➕ Anti-Channel Create',
+                            'antichanneledit': '✏️ Anti-Channel Edit',
+                            'antirolecreate': '🏷️ Anti-Role Create',
+                            'antiroledelete': '🗑️ Anti-Role Delete',
+                            'antiroleedit': '✏️ Anti-Role Edit'
+                        }[protectionType] %></span>
+                    </div>
+                    <p class="lang-ar"><%= {
+                        'antichandeldelete': 'منع حذف القنوات بدون إذن',
+                        'antichanelcreate': 'منع إنشاء قنوات جديدة بدون تصريح',
+                        'antichanneledit': 'منع تعديل إعدادات القنوات بدون إذن',
+                        'antirolecreate': 'منع إنشاء أدوار جديدة بدون تصريح',
+                        'antiroledelete': 'منع حذف الأدوار بدون إذن',
+                        'antiroleedit': 'منع تعديل صلاحيات الأدوار بدون تصريح'
+                    }[protectionType] %></p>
+                    <p class="lang-en" style="display: none;"><%= {
+                        'antichandeldelete': 'Prevent channel deletion without permission',
+                        'antichanelcreate': 'Prevent creating new channels without authorization',
+                        'antichanneledit': 'Prevent editing channel settings without permission',
+                        'antirolecreate': 'Prevent creating new roles without authorization',
+                        'antiroledelete': 'Prevent role deletion without permission',
+                        'antiroleedit': 'Prevent editing role permissions without authorization'
+                    }[protectionType] %></p>
+                    <label class="toggle-switch">
+                        <input type="checkbox" <%= db.get(`${guild.id}_${protectionType}`) ? 'checked' : '' %> onchange="toggleProtection('<%= protectionType %>', this.checked, '<%= guild.id %>')">
+                        <span class="slider"></span>
+                    </label>
+                </div>
+            <% }); %>
+            
+            <% ['antiadmingrant', 'antiban', 'antikick'].forEach(protectionType => { %>
+                <div class="command-card">
+                    <div class="command-name">
+                        <span class="lang-ar"><%= {
+                            'antiadmingrant': '🛡️ مكافحة منح صلاحيات الإدارة',
+                            'antiban': '🔨 مكافحة الحظر',
+                            'antikick': '👢 مكافحة الطرد'
+                        }[protectionType] %></span>
+                        <span class="lang-en" style="display: none;"><%= {
+                            'antiadmingrant': '🛡️ Anti-Admin Grant',
+                            'antiban': '🔨 Anti-Ban',
+                            'antikick': '👢 Anti-Kick'
+                        }[protectionType] %></span>
+                    </div>
+                    <p class="lang-ar"><%= {
+                        'antiadmingrant': 'منع منح صلاحيات الإدارة بدون تصريح',
+                        'antiban': 'منع حظر الأعضاء بدون إذن',
+                        'antikick': 'منع طرد الأعضاء بدون تصريح'
+                    }[protectionType] %></p>
+                    <p class="lang-en" style="display: none;"><%= {
+                        'antiadmingrant': 'Prevent granting admin permissions without authorization',
+                        'antiban': 'Prevent banning members without permission',
+                        'antikick': 'Prevent kicking members without authorization'
+                    }[protectionType] %></p>
+                    <label class="toggle-switch">
+                        <input type="checkbox" <%= db.get(`${guild.id}_${protectionType}`) ? 'checked' : '' %> onchange="toggleProtection('<%= protectionType %>', this.checked, '<%= guild.id %>')">
+                        <span class="slider"></span>
+                    </label>
+                </div>
+            <% }); %>
+            
+            <% commands.forEach(command => { %>
+                <div class="command-card">
+                    <div class="command-name"><%= command.name %></div>
+                    <p class="lang-ar"><%= command.description %></p>
+                    <p class="lang-en" style="display: none;"><%= command.descriptionEn %></p>
+                    <label class="toggle-switch">
+                        <input type="checkbox" <%= command.enabled ? 'checked' : '' %> onchange="toggleCommand('<%= command.name %>', this.checked, '<%= guild.id %>')">
+                        <span class="slider"></span>
+                    </label>
+                </div>
+            <% }); %>
+        </div>
+    </main>
+    <script>
+                document.onkeydown = function(e) {
+            if(e.keyCode == 123) {
+                return false;
+            }
+            if(e.ctrlKey && e.shiftKey && e.keyCode == 'I'.charCodeAt(0)) {
+                return false;
+            }
+            if(e.ctrlKey && e.shiftKey && e.keyCode == 'C'.charCodeAt(0)) {
+                return false;
+            }
+            if(e.ctrlKey && e.shiftKey && e.keyCode == 'J'.charCodeAt(0)) {
+                return false;
+            }
+            if(e.ctrlKey && e.keyCode == 'U'.charCodeAt(0)) {
+                return false;
+            }
+        }
+
+        // منع النقر بزر الماوس الأيمن
+        document.oncontextmenu = function(e) {
+            e.preventDefault();
+            return false;
+        }
+        function toggleCommand(commandName, isEnabled, guildId) {
+            fetch('/api/toggle-command', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ commandName, isEnabled, guildId }),
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    console.log(`تم ${isEnabled ? 'تفعيل' : 'تعطيل'} الأمر: ${commandName}`);
+                } else {
+                    console.error('حدث خطأ أثناء تبديل حالة الأمر');
+                    // إعادة الزر إلى حالته السابقة في حالة الفشل
+                    const checkbox = document.querySelector(`input[onchange="toggleCommand('${commandName}', this.checked, '${guildId}')"]`);
+                    if (checkbox) {
+                        checkbox.checked = !isEnabled;
+                    }
+                }
+            })
+            .catch((error) => {
+                console.error('خطأ:', error);
+                // إعادة الزر إلى حالته السابقة في حالة حدوث خطأ
+                const checkbox = document.querySelector(`input[onchange="toggleCommand('${commandName}', this.checked, '${guildId}')"]`);
+                if (checkbox) {
+                    checkbox.checked = !isEnabled;
+                }
+            });
+        }
+
+        function toggleProtection(protectionType, isEnabled, guildId) {
+            fetch('/api/toggle-protection', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ protectionType, isEnabled, guildId }),
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    console.log(`تم ${isEnabled ? 'تفعيل' : 'تعطيل'} الحماية: ${protectionType}`);
+                } else {
+                    console.error('حدث خطأ أثناء تبديل حالة الحماية');
+                    // إعادة الزر إلى حالته السابقة في حالة الفشل
+                    const checkbox = document.querySelector(`input[onchange="toggleProtection('${protectionType}', this.checked, '${guildId}')"]`);
+                    if (checkbox) {
+                        checkbox.checked = !isEnabled;
+                    }
+                }
+            })
+            .catch((error) => {
+                console.error('خطأ:', error);
+                // إعادة الزر إلى حالته السابقة في حالة حدوث خطأ
+                const checkbox = document.querySelector(`input[onchange="toggleProtection('${protectionType}', this.checked, '${guildId}')"]`);
+                if (checkbox) {
+                    checkbox.checked = !isEnabled;
+                }
+            });
+        }
+
+        function toggleLanguage() {
+            const arElements = document.querySelectorAll('.lang-ar');
+            const enElements = document.querySelectorAll('.lang-en');
+            arElements.forEach(el => el.style.display = el.style.display === 'none' ? '' : 'none');
+            enElements.forEach(el => el.style.display = el.style.display === 'none' ? '' : 'none');
+        }
+    </script>
+</body>
+</html>
