@@ -1,1 +1,42 @@
-node_modules
+# Node
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
+# Environment files
+# Ignore all environment files and variants
+.env
+.env.*
+*.env
+.env.*.local
+
+# Logs
+logs/
+*.log
+
+# Build output
+dist/
+build/
+coverage/
+
+# Editor directories
+.vscode/
+.idea/
+
+# macOS
+.DS_Store
+
+# Windows
+Thumbs.db
+desktop.ini
+
+# Misc
+.sass-cache/
+.cache/
+config/
+*.swp
+database.sqlite
+databasse.json
+database 
