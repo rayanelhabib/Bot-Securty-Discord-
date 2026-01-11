@@ -38,5 +38,10 @@ desktop.ini
 config/
 *.swp
 database.sqlite
-databasse.json
-database 
+database.json
+
+config/locales/*.json
+config/locales/*.yml
+config.json
+config.yml
+confg 
